@@ -29,28 +29,49 @@ function createToolbarButton(): HTMLElement {
   btn.className = 'btn btn-toolbar-button';
   btn.type = 'button';
   btn.title = 'My Code Snippets';
-  btn.innerHTML = '<span class="material-symbols-outlined">content_paste</span>';
+  const icon = document.createElement('span');
+  icon.className = 'material-symbols-outlined fs-5';
+  icon.textContent = 'content_paste';
+  btn.appendChild(icon);
   btn.addEventListener('click', showModal);
   return btn;
 }
 
-function ensureToolbarButton(retries = 20): void {
-  const toolbar = document.querySelector('.cm-editor .cm-panel-eos-toolbar');
-  if (!toolbar) {
-    if (retries > 0) {
-      setTimeout(() => ensureToolbarButton(retries - 1), 200);
-    }
-    return;
-  }
-  if (toolbarButton && toolbar.contains(toolbarButton)) return;
+function addToolbarButton(): void {
+  if (toolbarButton && document.contains(toolbarButton)) return;
+
+  const toolbar = document.querySelector(
+    '._codemirror-editor-toolbar_q11bm_1 .simplebar-content .d-flex.gap-2'
+  );
+  if (!toolbar) return;
+
   toolbarButton = createToolbarButton();
   toolbar.appendChild(toolbarButton);
+}
+
+function waitForToolbar(): void {
+  const maxAttempts = 20;
+  let attempts = 0;
+
+  const tryAdd = () => {
+    attempts++;
+    const toolbar = document.querySelector(
+      '._codemirror-editor-toolbar_q11bm_1 .simplebar-content .d-flex.gap-2'
+    );
+    if (toolbar) {
+      addToolbarButton();
+    } else if (attempts < maxAttempts) {
+      setTimeout(tryAdd, 200);
+    }
+  };
+
+  tryAdd();
 }
 
 function onNavigate(): void {
   const hash = window.location.hash;
   if (hash.includes('edit')) {
-    ensureToolbarButton();
+    waitForToolbar();
   }
 }
 
