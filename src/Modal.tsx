@@ -322,8 +322,8 @@ const btnSmDangerStyle: React.CSSProperties = {
 const errorStyle: React.CSSProperties = {
   padding: '8px 12px',
   marginBottom: '12px',
-  backgroundColor: '#f8d7da',
-  color: '#842029',
+  backgroundColor: 'var(--bs-danger-bg-subtle, #f8d7da)',
+  color: 'var(--bs-danger-text-emphasis, #842029)',
   borderRadius: '4px',
   fontSize: '0.875rem',
 };
